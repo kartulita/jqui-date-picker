@@ -1,4 +1,4 @@
-(function (angular, jquery, moment) {
+(function (angular, $, moment) {
 	'use strict';
 
 	angular.module('battlesnake.date-picker')
@@ -9,7 +9,6 @@
 			restrict: 'A',
 			require: 'ngModel',
 			scope: {
-				datePickerClose: '&',
 				datePickerSelect: '&',
 				datePickerActive: '=',
 				datePickerAlign: '@'
@@ -28,7 +27,6 @@
 				.datepicker({
 					dateFormat: 'yy-mm-dd',
 					onSelect: viewValueChanged,
-					onClose: onClose,
 					showOptions: { direction: 'down' }
 				});
 
@@ -54,10 +52,12 @@
 					} else if (align.match(/\bright\b/)) {
 						x = p.right - (c.right - c.left);
 					}
+					x += window.scrollX, y += window.scrollY;
 					container
 						.css({
 							left: x + 'px',
 							top: y + 'px',
+							zIndex: 999999,
 							visibility: 'visible'
 						})
 						.datepicker('setDate', ngModel.$modelValue.toDate())
@@ -69,15 +69,14 @@
 			}
 
 			function viewValueChanged(value) {
+				var value = moment(Date.parse(value));
 				scope.$apply(function () {
-					ngModel.$setViewValue(moment(Date.parse(value)));
-					scope.datePickerSelect({});
+					ngModel.$setViewValue(value);
 					scope.datePickerActive = false;
 				});
-			}
-
-			function onClose() {
-				scope.datePickerClose({});
+				scope.$apply(function () {
+					scope.datePickerSelect({ value: value });
+				});
 			}
 		}
 	}
