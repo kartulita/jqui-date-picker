@@ -18,17 +18,22 @@
 
 		/* Too lazy to code a separate controller */
 		function link(scope, element, attrs, ngModel) {
+			var loc_id = (moment.locale() || 'en').substr(0, 2);
+			var locales = $.datepicker.regional;
+			var locale = loc_id in locales ? locales[loc_id] : locales.en;
 			var container = angular.element('<div></div>')
 				.css({
 					position: 'absolute',
 					display: 'inline-block'
 				})
 				.addClass('ui-datepicker ui-widget')
+				.datepicker(locale)
 				.datepicker({
 					dateFormat: 'yy-mm-dd',
 					onSelect: viewValueChanged,
-					showOptions: { direction: 'down' }
-				});
+					showOptions: { direction: 'down' },
+				})
+				;
 
 			scope.$watch('datePickerActive', setActive);
 
