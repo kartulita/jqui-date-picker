@@ -1,4 +1,4 @@
-(function (angular, $, moment) {
+(function (angular, $, moment, _) {
 	'use strict';
 
 	angular.module('battlesnake.date-picker')
@@ -18,21 +18,22 @@
 
 		/* Too lazy to code a separate controller */
 		function link(scope, element, attrs, ngModel) {
-			var loc_id = (moment.locale() || 'en').substr(0, 2);
-			var locales = $.datepicker.regional;
-			var locale = loc_id in locales ? locales[loc_id] : locales.en;
+			var loc_id = (moment.locale() || 'et').substr(0, 2);
+			var locales = $.datepicker.regional || {};
+			var config = _({}).extend(locales[loc_id], {
+				dateFormat: 'yy-mm-dd',
+				onSelect: viewValueChanged,
+				showOptions: { direction: 'down' }
+			});
 			var container = angular.element('<div></div>')
 				.css({
 					position: 'absolute',
-					display: 'inline-block'
+					display: 'inline-block',
+					top: 0,
+					left: 0
 				})
 				.addClass('ui-datepicker ui-widget')
-				.datepicker(locale)
-				.datepicker({
-					dateFormat: 'yy-mm-dd',
-					onSelect: viewValueChanged,
-					showOptions: { direction: 'down' },
-				})
+				.datepicker(config)
 				;
 
 			scope.$watch('datePickerActive', setActive);
@@ -42,6 +43,7 @@
 			return;
 
 			function setActive(value) {
+				/* Don't use display:none as it stops getBoundingClientRect from working */
 				if (value) {
 					var p = element[0].getBoundingClientRect();
 					var c = container[0].getBoundingClientRect();
@@ -68,7 +70,9 @@
 						.datepicker('setDate', ngModel.$modelValue.toDate())
 				} else {
 					container.css({
-						visibility: 'hidden'
+						visibility: 'hidden',
+						top: 0,
+						left: 0
 					});
 				}
 			}
@@ -86,4 +90,4 @@
 		}
 	}
 
-})(window.angular, window.$, window.moment);
+})(window.angular, window.$, window.moment, window._);
