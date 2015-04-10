@@ -5,6 +5,8 @@
 		.directive('jquiDatePicker', jquiDatePickerDirective);
 
 	function jquiDatePickerDirective() {
+		$("<style>.kartulita.ui-datepicker .ui-datepicker-next:before,.kartulita.ui-datepicker .ui-datepicker-prev:before { content: ''; }</style>").appendTo($('head'));
+
 		return {
 			restrict: 'A',
 			require: 'ngModel',
@@ -32,7 +34,7 @@
 					top: 0,
 					left: 0
 				})
-				.addClass('ui-datepicker ui-widget')
+				.addClass('ui-datepicker ui-widget kartulita')
 				.datepicker(config)
 				;
 
