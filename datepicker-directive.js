@@ -61,7 +61,8 @@
 					} else if (align.match(/\bright\b/)) {
 						x = p.right - (c.right - c.left);
 					}
-					x += window.scrollX, y += window.scrollY;
+					x += window.scrollX;
+					y += window.scrollY;
 					container
 						.css({
 							left: x + 'px',
@@ -70,6 +71,7 @@
 							visibility: 'visible'
 						})
 						.datepicker('setDate', ngModel.$modelValue.toDate())
+						;
 				} else {
 					container.css({
 						visibility: 'hidden',
@@ -80,7 +82,7 @@
 			}
 
 			function viewValueChanged(value) {
-				var value = moment(Date.parse(value));
+				value = moment(Date.parse(value));
 				scope.$apply(function () {
 					ngModel.$setViewValue(value);
 					scope.datePickerActive = false;
